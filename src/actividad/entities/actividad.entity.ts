@@ -12,7 +12,7 @@ export class Actividad {
   descripcion?: string;
 
   @Column()
-  fecha: string;
+  fecha: Date;
 
   @Column('decimal')
   precio: number;

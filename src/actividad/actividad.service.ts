@@ -11,18 +11,22 @@ export class ActividadService {
     private readonly actividadRepository: Repository<Actividad>,
   ) {}
 
-  // 🟢 Crear una nueva actividad
   async create(createActividadDto: CreateActividadDto): Promise<Actividad> {
+  try {
     const nuevaActividad = this.actividadRepository.create(createActividadDto);
     return await this.actividadRepository.save(nuevaActividad);
+  } catch (error) {
+    console.error('Error al crear actividad:', error);
+    throw error;
   }
+}
 
-  // 🔍 Obtener todas las actividades
+  // Obtener todas las actividades
   async findAll(): Promise<Actividad[]> {
     return await this.actividadRepository.find();
   }
 
-  // 🔍 Obtener una actividad por ID — ESTE ES EL MÉTODO QUE PREGUNTÁS
+  //  Obtener una actividad por ID 
 async findOne(id: number): Promise<Actividad> {
   const actividad = await this.actividadRepository.findOne({
     where: { id },
@@ -35,14 +39,17 @@ async findOne(id: number): Promise<Actividad> {
   return actividad;
 }
 
-  // ✏️ Actualizar una actividad
+  // Actualizar una actividad
   async update(id: number, updateActividadDto: Partial<CreateActividadDto>): Promise<Actividad> {
     await this.actividadRepository.update(id, updateActividadDto);
     return await this.findOne(id); // Ya lanza NotFoundException si no existe
   }
 
-  // 🗑️ Eliminar una actividad
+  // Eliminar una actividad
   async remove(id: number): Promise<void> {
-    await this.actividadRepository.delete(id);
+  const result = await this.actividadRepository.delete(id);
+  if (result.affected === 0) {
+    throw new NotFoundException(`Actividad con ID ${id} no encontrada`);
   }
+}
 }

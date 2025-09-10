@@ -5,7 +5,7 @@ import { UpdateActividadDto } from './dto/update-actividad.dto';
 
 @Controller('actividad')
 export class ActividadController {
-  constructor(private readonly actividadService: ActividadService) {}
+  constructor(private readonly actividadService: ActividadService) { }
 
   @Post()
   create(@Body() createActividadDto: CreateActividadDto) {
