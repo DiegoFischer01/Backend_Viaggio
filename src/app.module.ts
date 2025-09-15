@@ -3,6 +3,8 @@ import { AppController } from './app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { ActividadModule } from './actividad/actividad.module';
+import { ReservaModule } from './reserva/reserva.module';
+
 
 @Module({
   imports: [
@@ -18,7 +20,8 @@ import { ActividadModule } from './actividad/actividad.module';
     }),
     UsuariosModule,
     ActividadModule,
+    ReservaModule,
   ],
-  controllers: [AppController], // 👈 Esto es clave
+  controllers: [AppController], 
 })
 export class AppModule {}
