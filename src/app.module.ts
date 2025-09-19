@@ -4,6 +4,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { ActividadModule } from './actividad/actividad.module';
 import { HotelesModule } from './hoteles/hoteles.module';
+import { Hotel } from './hoteles/entities/hoteles.entitys';
+import { Usuario } from './usuarios/usuario.entity';
+import { Actividad } from './actividad/entities/actividad.entity';
 
 @Module({
   imports: [
@@ -14,7 +17,8 @@ import { HotelesModule } from './hoteles/hoteles.module';
       username: 'root',
       password: '123456',
       database: 'viaggio',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+    //  entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      entities: [Hotel, Usuario, Actividad], 
       synchronize: true,
     }),
     UsuariosModule,
