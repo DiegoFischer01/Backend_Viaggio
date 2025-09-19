@@ -13,7 +13,7 @@ import { ReservaModule } from './reserva/reserva.module';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: 'dddf10',
+      password: 'Simon_Martorano_123',
       database: 'viaggio',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,

@@ -44,7 +44,7 @@ export class ReservaController {
   }
 
   @Delete(':id')
-  async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<Reserva> {
     return await this.reservaService.remove(id);
   }
 }

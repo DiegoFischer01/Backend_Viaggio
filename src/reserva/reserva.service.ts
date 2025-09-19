@@ -46,8 +46,9 @@ export class ReservaService {
     return this.reservaRepository.save(reserva);
   }
 
-  public async remove(id: number): Promise<void> {
-    await this.findOne(id);
-    await this.reservaRepository.delete(id);
+  public async remove(id: number): Promise<Reserva> {
+    const reserva = await this.findOne(id);
+
+    return await this.reservaRepository.remove(reserva);
   }
 }
