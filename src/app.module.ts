@@ -25,6 +25,6 @@ import { Actividad } from './actividad/entities/actividad.entity';
     ActividadModule,
     HotelesModule,
   ],
-  controllers: [AppController], // 👈 Esto es clave
+  controllers: [AppController], 
 })
 export class AppModule {}

@@ -8,6 +8,6 @@ import { HotelesController } from './hoteles.controller';
   imports: [TypeOrmModule.forFeature([Hotel])],
   providers: [HotelesService],
   controllers: [HotelesController],
-  exports: [HotelesService], // Asegúrate de exportar el servicio si lo necesitas en otros módulos
+  exports: [HotelesService], 
 })
 export class HotelesModule {}
