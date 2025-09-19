@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { ActividadModule } from './actividad/actividad.module';
+import { HotelesModule } from './hoteles/hoteles.module';
 
 @Module({
   imports: [
@@ -11,13 +12,14 @@ import { ActividadModule } from './actividad/actividad.module';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: 'dddf10',
+      password: '123456',
       database: 'viaggio',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
     UsuariosModule,
     ActividadModule,
+    HotelesModule,
   ],
   controllers: [AppController], // 👈 Esto es clave
 })
