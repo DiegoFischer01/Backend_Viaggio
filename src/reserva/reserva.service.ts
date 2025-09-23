@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateReservaDto } from './dto/create-reserva.dto';
 import { UpdateReservaDto } from './dto/update-reserva.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -27,8 +31,20 @@ export class ReservaService {
   }
 
   public async create(createReservaDto: CreateReservaDto): Promise<Reserva> {
-    const reserva = this.reservaRepository.create(createReservaDto);
-    return this.reservaRepository.save(reserva);
+    const fechaLlegadaDate = new Date(createReservaDto.fechaLlegada);
+    const fechaRegresoDate = createReservaDto.fechaRegreso
+      ? new Date(createReservaDto.fechaRegreso)
+      : null;
+
+    if (fechaRegresoDate && fechaRegresoDate <= fechaLlegadaDate) {
+      throw new BadRequestException(
+        'La fecha de regreso debe ser posterior a la fecha de llegada',
+      );
+    }
+
+    const reservaEntity = this.reservaRepository.create(createReservaDto);
+
+    return this.reservaRepository.save(reservaEntity);
   }
 
   public async update(

@@ -1,8 +1,4 @@
-import {
-  Column,
-  Entity,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Reserva {
@@ -12,10 +8,10 @@ export class Reserva {
   @Column()
   ciudad: string;
 
-  @Column()
+  @Column({ type: 'date' })
   fechaLlegada: Date;
 
-  @Column()
+  @Column({ type: 'date', nullable: true })
   fechaRegreso: Date;
 
   // @ManyToMany(() => Actividad, (actividad) => actividad.reservas)
