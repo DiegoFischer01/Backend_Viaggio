@@ -1,5 +1,5 @@
 {
-  "name": "Backend_Viaggio",
+  "name": "backend-viaggio",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -23,7 +23,7 @@
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
     "@nestjs/jwt": "^11.0.0",
-    "@nestjs/mapped-types": "*",
+    "@nestjs/mapped-types": "^2.1.0",
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/typeorm": "^11.0.0",
