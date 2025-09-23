@@ -5,6 +5,10 @@ import { UsuariosModule } from './usuarios/usuarios.module';
 import { ActividadModule } from './actividad/actividad.module';
 import { ReservaModule } from './reserva/reserva.module';
 
+import { HotelesModule } from './hoteles/hoteles.module';
+import { Hotel } from './hoteles/entities/hoteles.entitys';
+import { Usuario } from './usuarios/entities/usuario.entity';
+import { Actividad } from './actividad/entities/actividad.entity';
 
 @Module({
   imports: [
@@ -15,12 +19,14 @@ import { ReservaModule } from './reserva/reserva.module';
       username: 'root',
       password: 'Simon_Martorano_123',
       database: 'viaggio',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+    //  entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      entities: [Hotel, Usuario, Actividad], 
       synchronize: true,
     }),
     UsuariosModule,
     ActividadModule,
     ReservaModule,
+    HotelesModule,
   ],
   controllers: [AppController], 
 })
