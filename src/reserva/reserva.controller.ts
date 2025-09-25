@@ -16,7 +16,6 @@ import { UpdateReservaDto } from './dto/update-reserva.dto';
 import { Reserva } from './entities/reserva.entity';
 
 @Controller('reservas')
-@UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
 export class ReservaController {
   constructor(private readonly reservaService: ReservaService) {}
 

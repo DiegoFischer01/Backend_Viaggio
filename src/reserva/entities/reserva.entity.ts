@@ -1,6 +1,17 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Actividad } from 'src/actividad/entities/actividad.entity';
+import { Hotel } from 'src/hoteles/entities/hoteles.entitys';
+import { Usuario } from 'src/usuarios/entities/usuario.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-@Entity()
+@Entity('reservas')
 export class Reserva {
   @PrimaryGeneratedColumn()
   idReserva: number;
@@ -14,14 +25,15 @@ export class Reserva {
   @Column({ type: 'date', nullable: true })
   fechaRegreso: Date;
 
-  // @ManyToMany(() => Actividad, (actividad) => actividad.reservas)
-  // actividades: Actividad[];
+  @ManyToMany(() => Actividad, (actividad) => actividad.reservas)
+  @JoinTable()
+  actividades: Actividad[];
 
-  // @ManyToOne(() => Hotel, (hotel) => hotel.reservas)
-  // @JoinColumn()
-  // hotel: Hotel;
+  @ManyToOne(() => Hotel, (hotel) => hotel.reservas)
+  @JoinColumn()
+  hotel: Hotel;
 
-  // @ManyToOne(() => Usuario, (usuario) => usuario.reservas)
-  // @JoinColumn()
-  // usuario: Usuario;
+  @ManyToOne(() => Usuario, (usuario) => usuario.reservas)
+  @JoinColumn()
+  usuario: Usuario;
 }

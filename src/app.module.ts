@@ -9,6 +9,7 @@ import { HotelesModule } from './hoteles/hoteles.module';
 import { Hotel } from './hoteles/entities/hoteles.entitys';
 import { Usuario } from './usuarios/entities/usuario.entity';
 import { Actividad } from './actividad/entities/actividad.entity';
+import { Reserva } from './reserva/entities/reserva.entity';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { Actividad } from './actividad/entities/actividad.entity';
       password: 'Simon_Martorano_123',
       database: 'viaggio',
     //  entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      entities: [Hotel, Usuario, Actividad], 
+      entities: [Hotel, Usuario, Actividad, Reserva], 
       synchronize: true,
     }),
     UsuariosModule,
