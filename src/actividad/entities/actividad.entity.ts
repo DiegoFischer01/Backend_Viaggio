@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Reserva } from 'src/reserva/entities/reserva.entity';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
 
 @Entity()
 export class Actividad {
@@ -16,4 +17,7 @@ export class Actividad {
 
   @Column('decimal')
   precio: number;
+
+  @ManyToMany(() => Reserva, (reserva) => reserva.actividades)
+  reservas: Reserva[];
 }
