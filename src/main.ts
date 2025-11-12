@@ -14,9 +14,9 @@ async function bootstrap() {
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
-      transform: true,          // 🔹 Esto convierte el JSON en instancia del DTO
+      transform: true,          // Convierte el JSON en instancia del DTO
       transformOptions: {
-        enableImplicitConversion: true, // 🔹 Convierte tipos (por ejemplo, id:string → number)
+        enableImplicitConversion: true, // Convierte tipos
       },
     }),
   );
