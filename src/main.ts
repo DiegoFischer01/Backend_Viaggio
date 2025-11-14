@@ -1,3 +1,8 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
+
+
+
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
@@ -14,9 +19,9 @@ async function bootstrap() {
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
-      transform: true,          // 🔹 Esto convierte el JSON en instancia del DTO
+      transform: true,
       transformOptions: {
-        enableImplicitConversion: true, // 🔹 Convierte tipos (por ejemplo, id:string → number)
+        enableImplicitConversion: true,
       },
     }),
   );
@@ -24,4 +29,5 @@ async function bootstrap() {
   await app.listen(process.env.PORT ?? 3000);
   console.log(`🚀 Servidor corriendo en http://localhost:${process.env.PORT ?? 3000}`);
 }
+
 bootstrap();
