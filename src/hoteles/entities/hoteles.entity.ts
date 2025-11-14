@@ -27,6 +27,9 @@ export class Hotel {
   @Column()
   imagenUrl: string;
 
+  @Column({ type: 'decimal', precision: 2, scale: 1 })
+  estrellas: number;
+
   @OneToMany(() => Reserva, (reserva) => reserva.hotel)
   reservas: Reserva[];
 }
