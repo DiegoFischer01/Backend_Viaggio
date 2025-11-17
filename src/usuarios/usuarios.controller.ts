@@ -2,33 +2,40 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { UsuarioService } from './usuarios.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
 
 @Controller('usuarios')
 export class UsuariosController {
-    constructor(private readonly usuarioService: UsuarioService) {}
+  constructor(private readonly usuarioService: UsuarioService) {}
 
-    @Post()
-    create(@Body() createUserDto: CreateUserDto) {
-        return this.usuarioService.create(createUserDto);
-    }
+  @Post()
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.usuarioService.create(createUserDto);
+  }
 
-    @Get()
-    findAll() {
-        return this.usuarioService.findAll();
-    }
+  @Post('login')
+  async login(@Body() loginUserDto: LoginUserDto) {
+    const usuarioConToken = await this.usuarioService.login(loginUserDto);
+    return usuarioConToken;
+  }
 
-    @Get(`:id`)
-    findOne(@Param(`id`) id:string) {
-        return this.usuarioService.findOne(+id);
-    }
+  @Get()
+  findAll() {
+    return this.usuarioService.findAll();
+  }
 
-    @Patch(`:id`)
-    update(@Param(`id`) id:string, @Body() updateUserDto:UpdateUserDto) {
-        return this.usuarioService.update(+id, updateUserDto);
-    }
+  @Get(`:id`)
+  findOne(@Param(`id`) id: string) {
+    return this.usuarioService.findOne(+id);
+  }
 
-    @Delete(`:id`)
-    remove(@Param(`id`) id:string) {
-        return this.usuarioService.remove(+id);
-    }
+  @Patch(`:id`)
+  update(@Param(`id`) id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.usuarioService.update(+id, updateUserDto);
+  }
+
+  @Delete(`:id`)
+  remove(@Param(`id`) id: string) {
+    return this.usuarioService.remove(+id);
+  }
 }
