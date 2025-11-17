@@ -13,6 +13,9 @@ export class CreateHotelDto {
   @IsNumber()
   precio: number;
 
+  @IsNumber()
+  estrellas: number;
+
   @IsOptional()
   @IsDateString()
   reservadoDesde?: Date;

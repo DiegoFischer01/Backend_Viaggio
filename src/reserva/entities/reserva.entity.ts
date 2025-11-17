@@ -1,5 +1,5 @@
 import { Actividad } from 'src/actividad/entities/actividad.entity';
-import { Hotel } from 'src/hoteles/entities/hoteles.entitys';
+import { Hotel } from 'src/hoteles/entities/hoteles.entity';
 import { Usuario } from 'src/usuarios/entities/usuario.entity';
 import {
   Column,

@@ -8,7 +8,7 @@ import { UpdateReservaDto } from './dto/update-reserva.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Reserva } from './entities/reserva.entity';
 import { In, Repository } from 'typeorm';
-import { Hotel } from 'src/hoteles/entities/hoteles.entitys';
+import { Hotel } from 'src/hoteles/entities/hoteles.entity';
 import { Usuario } from 'src/usuarios/entities/usuario.entity';
 import { Actividad } from 'src/actividad/entities/actividad.entity';
 
