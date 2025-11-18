@@ -23,7 +23,8 @@ import { Reserva } from './reserva/entities/reserva.entity';
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE,
     entities: [Hotel, Usuario, Actividad, Reserva],
-    synchronize: true,
+    synchronize: false,
+    autoLoadEntities: true,
   }),
 
 
