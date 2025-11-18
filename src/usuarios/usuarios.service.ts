@@ -54,9 +54,17 @@ export class UsuarioService {
     if (!passwordMatch) throw new UnauthorizedException('Correo o contraseña incorrectos');
 
     // Generar JWT
-    const payload = { sub: usuario.id, email: usuario.email };
+    const payload = { sub: usuario.id, email: usuario.email, role: usuario.role };
     const token = this.jwtService.sign(payload);
 
-    return { user: { id: usuario.id, nombre: usuario.nombre, email: usuario.email }, token };
+    return { 
+      user: { 
+        id: usuario.id,
+        nombre: usuario.nombre, 
+        email: usuario.email,
+        role: usuario.role,
+      }, 
+        token,
+      };
   }
 }

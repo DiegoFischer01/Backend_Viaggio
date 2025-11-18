@@ -9,10 +9,10 @@ export class Hotel {
   @Column()
   nombre: string;
 
-  @Column()
+  @Column({nullable: true})
   direccion: string;
 
-  @Column()
+  @Column({nullable: true})
   categoria: string; // hotel, departamento, etc.
 
   @Column('decimal')
@@ -24,11 +24,26 @@ export class Hotel {
   @Column({ type: 'date', nullable: true })
   reservadoHasta: Date;
 
-  @Column()
+  @Column({ nullable: true })
   imagenUrl: string;
 
   @Column({ type: 'decimal', precision: 2, scale: 1 })
   estrellas: number;
+
+  @Column()
+  imagenPrincipal: string;  
+
+  @Column("simple-array", { nullable: true })
+  imagenesExtras: string[];
+
+  @Column("text")
+  descripcion: string;
+
+  @Column({ nullable: true })
+  personas: number;
+
+  @Column("simple-array", { nullable: true })
+  servicios: string[];
 
   @OneToMany(() => Reserva, (reserva) => reserva.hotel)
   reservas: Reserva[];

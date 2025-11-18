@@ -1,14 +1,16 @@
-import { IsString, IsNumber, IsOptional, IsDateString } from 'class-validator';
+import { IsString, IsNumber, IsOptional, IsArray } from 'class-validator';
 
 export class CreateHotelDto {
   @IsString()
   nombre: string;
 
+  @IsOptional()
   @IsString()
-  direccion: string;
+  direccion?: string;
 
+  @IsOptional()
   @IsString()
-  categoria: string;
+  categoria?: string;
 
   @IsNumber()
   precio: number;
@@ -17,13 +19,25 @@ export class CreateHotelDto {
   estrellas: number;
 
   @IsOptional()
-  @IsDateString()
-  reservadoDesde?: Date;
-
-  @IsOptional()
-  @IsDateString()
-  reservadoHasta?: Date;
+  @IsString()
+  imagenUrl?: string;
 
   @IsString()
-  imagenUrl: string;
+  descripcion: string;
+
+  @IsString()
+  imagenPrincipal: string;
+
+  @IsOptional()
+  @IsArray()
+  imagenesExtras?: string[];
+
+  @IsOptional()
+  @IsNumber()
+  personas?: number;
+
+  @IsOptional()
+  @IsArray()
+  servicios?: string[];
+
 }

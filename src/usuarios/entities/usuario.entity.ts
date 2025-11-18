@@ -15,6 +15,9 @@ export class Usuario {
   @Column()
   password: string;
 
+  @Column({ default: "user"})
+  role: string;
+
   @OneToMany(() => Reserva, (reserva) => reserva.usuario)
   reservas: Reserva[];
 }
