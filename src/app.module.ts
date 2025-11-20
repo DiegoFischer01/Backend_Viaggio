@@ -12,6 +12,8 @@ import { Hotel } from './hoteles/entities/hoteles.entity';
 import { Usuario } from './usuarios/entities/usuario.entity';
 import { Actividad } from './actividad/entities/actividad.entity';
 import { Reserva } from './reserva/entities/reserva.entity';
+import { ComentariosModule } from './comentarios/comentarios.module';
+
 
 @Module({
   imports: [
@@ -32,6 +34,7 @@ import { Reserva } from './reserva/entities/reserva.entity';
     ActividadModule,
     ReservaModule,
     HotelesModule,
+    ComentariosModule,
   ],
 })
 export class AppModule {}
