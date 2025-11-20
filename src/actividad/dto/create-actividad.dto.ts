@@ -1,16 +1,22 @@
-import { IsString, IsOptional, IsDateString, IsNumber } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsString, IsOptional, IsDate, IsNumber } from 'class-validator';
 
 export class CreateActividadDto {
   @IsString()
-  nombre: string;
+  titulo: string;
+
+  @IsString()
+  descripcion: string;
 
   @IsOptional()
-  @IsString()
-  descripcion?: string;
+  @Type(() => Date)
+  @IsDate()
+  fecha: Date | null;
 
-  @IsDateString()
-  fecha: string;
-
+  @IsOptional()
   @IsNumber()
-  precio: number;
+  precio?: number;
+
+  @IsString()
+  imagenUrl: string;
 }

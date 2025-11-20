@@ -1,22 +1,25 @@
 import { Reserva } from 'src/reserva/entities/reserva.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
 
-@Entity()
+@Entity('actividades')
 export class Actividad {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  nombre: string;
-
-  @Column({ nullable: true })
-  descripcion?: string;
+  titulo: string;
 
   @Column()
-  fecha: Date;
+  descripcion: string;
 
-  @Column('decimal')
-  precio: number;
+  @Column({ type: 'datetime', nullable: true })
+  fecha?: Date | null;
+
+  @Column('decimal', { nullable: true })
+  precio?: number | null;
+
+  @Column()
+  imagenUrl: string;
 
   @ManyToMany(() => Reserva, (reserva) => reserva.actividades)
   reservas: Reserva[];
