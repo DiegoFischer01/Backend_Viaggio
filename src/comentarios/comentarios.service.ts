@@ -6,7 +6,6 @@ import { CreateComentarioDto } from './dto/create-comentario.dto';
 
 @Injectable()
 export class ComentariosService {
-    repo: any;
 
     constructor(
         @InjectRepository(Comentario)
@@ -45,4 +44,13 @@ export class ComentariosService {
 
         return { message: "Comentario eliminado correctamente" };
     }
+    async update(id: number, mensaje: string) {
+        const comentario = await this.comentarioRepo.findOne({ where: { id } });
+
+        if (!comentario) throw new NotFoundException("Comentario no encontrado");
+
+        comentario.mensaje = mensaje;
+        return await this.comentarioRepo.save(comentario);
+    }
+
 }

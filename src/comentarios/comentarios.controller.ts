@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
 import { ComentariosService } from './comentarios.service';
 import { CreateComentarioDto } from './dto/create-comentario.dto';
 
@@ -21,5 +21,14 @@ export class ComentariosController {
     delete(@Param('id') id: number) {
     return this.comentariosService.delete(id);
     }
+
+    @Put(":id")
+    update(
+    @Param("id") id: number,
+    @Body("mensaje") mensaje: string
+    ) {
+    return this.comentariosService.update(id, mensaje);
+    }
+
 
 }
