@@ -15,18 +15,19 @@ import { Reserva } from './reserva/entities/reserva.entity';
 
 @Module({
   imports: [
-  TypeOrmModule.forRoot({
-    type: 'mysql',
-    host: process.env.MYSQL_HOST,
-    port: Number(process.env.MYSQL_PORT),
-    username: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE,
-    entities: [Hotel, Usuario, Actividad, Reserva],
-    synchronize: false,
-    autoLoadEntities: true,
-  }),
-
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: process.env.MYSQL_HOST,
+      port: Number(process.env.MYSQL_PORT),
+      username: process.env.MYSQL_USER,
+      password: process.env.MYSQL_PASSWORD,
+      database: process.env.MYSQL_DATABASE,
+      entities: [Hotel, Usuario, Actividad, Reserva],
+      synchronize: false,
+      migrations: ['dist/src/migrations/*.js'],
+      migrationsRun: false,
+      autoLoadEntities: true,
+    }),
 
     UsuariosModule,
     ActividadModule,
