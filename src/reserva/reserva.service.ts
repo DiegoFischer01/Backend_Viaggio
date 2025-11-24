@@ -26,6 +26,7 @@ export class ReservaService {
 
     @InjectRepository(Actividad)
     private actividadRepository: Repository<Actividad>,
+
   ) {}
 
   public async findAll(): Promise<Reserva[]> {
@@ -130,4 +131,23 @@ export class ReservaService {
     const reserva = await this.findOne(id);
     return this.reservaRepository.remove(reserva);
   }
+  
+  public async enviarConfirmacion(id: number) {
+  const reserva = await this.reservaRepository.findOne({
+    where: { idReserva: id },
+    relations: ['usuario', 'hotel', 'actividades'],
+  });
+
+  if (!reserva) {
+    throw new NotFoundException(`No se encontró la reserva con id ${id}`);
+  }
+
+  // Si después querés mandar mail, este es el lugar.
+  // Por ahora devolvemos la reserva para confirmar que funciona.
+  return {
+    message: 'Confirmación enviada correctamente (simulada)',
+    reserva,
+  };
+}
+
 }

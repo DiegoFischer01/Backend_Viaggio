@@ -24,7 +24,10 @@ export class ReservaController {
   }
 
   @Patch(':id')
-  async update(@Param('id', ParseIntPipe) id: number, @Body() updateReservaDto: UpdateReservaDto): Promise<Reserva> {
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateReservaDto: UpdateReservaDto,
+  ): Promise<Reserva> {
     return this.reservaService.update(id, updateReservaDto);
   }
 
@@ -33,8 +36,9 @@ export class ReservaController {
     return this.reservaService.remove(id);
   }
 
-  /*@Post(':id/enviar-confirmacion')
+  // End-point para enviar confirmación por mail
+  @Post(':id/enviar-confirmacion')
   async enviarConfirmacion(@Param('id', ParseIntPipe) id: number) {
     return this.reservaService.enviarConfirmacion(id);
-  }*/
+  }
 }
