@@ -1,7 +1,6 @@
-// src/app.module.ts
-
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
 
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { ActividadModule } from './actividad/actividad.module';
@@ -14,9 +13,12 @@ import { Actividad } from './actividad/entities/actividad.entity';
 import { Reserva } from './reserva/entities/reserva.entity';
 import { ComentariosModule } from './comentarios/comentarios.module';
 
-
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.MYSQL_HOST,
