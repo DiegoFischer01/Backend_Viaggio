@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Usuario } from './entities/usuario.entity';
@@ -31,7 +35,8 @@ export class UsuarioService {
 
   async findOne(id: number): Promise<Usuario> {
     const usuario = await this.usuarioRepository.findOne({ where: { id } });
-    if (!usuario) throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
+    if (!usuario)
+      throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
     return usuario;
   }
 
@@ -47,24 +52,35 @@ export class UsuarioService {
   }
 
   async login(loginDto: LoginUserDto) {
-    const usuario = await this.usuarioRepository.findOne({ where: { email: loginDto.email } });
-    if (!usuario) throw new UnauthorizedException('Correo o contraseña incorrectos');
+    const usuario = await this.usuarioRepository.findOne({
+      where: { email: loginDto.email },
+    });
+    if (!usuario)
+      throw new UnauthorizedException('Correo o contraseña incorrectos');
 
-    const passwordMatch = await bcrypt.compare(loginDto.password, usuario.password);
-    if (!passwordMatch) throw new UnauthorizedException('Correo o contraseña incorrectos');
+    const passwordMatch = await bcrypt.compare(
+      loginDto.password,
+      usuario.password,
+    );
+    if (!passwordMatch)
+      throw new UnauthorizedException('Correo o contraseña incorrectos');
 
-    // Generar JWT
-    const payload = { sub: usuario.id, email: usuario.email, role: usuario.role };
+    const payload = {
+      sub: usuario.id,
+      nombre: usuario.nombre,
+      email: usuario.email,
+      role: usuario.role,
+    };
     const token = this.jwtService.sign(payload);
 
-    return { 
-      user: { 
+    return {
+      user: {
         id: usuario.id,
-        nombre: usuario.nombre, 
+        nombre: usuario.nombre,
         email: usuario.email,
         role: usuario.role,
-      }, 
-        token,
-      };
+      },
+      token,
+    };
   }
 }
