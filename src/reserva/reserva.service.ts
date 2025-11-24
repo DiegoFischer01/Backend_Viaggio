@@ -46,112 +46,77 @@ export class ReservaService {
   }
 
   public async create(createReservaDto: CreateReservaDto): Promise<Reserva> {
-    // Validar fecha
-    const fechaLlegadaDate = new Date(createReservaDto.fechaLlegada);
-    const fechaRegresoDate = createReservaDto.fechaRegreso
-      ? new Date(createReservaDto.fechaRegreso)
-      : null;
+    const { hotelId, usuarioId, actividadIds, ciudad, fechaLlegada, fechaRegreso } = createReservaDto;
 
+    // Validar fechas
+    const fechaLlegadaDate = new Date(fechaLlegada);
+    const fechaRegresoDate = fechaRegreso ? new Date(fechaRegreso) : undefined;
     if (fechaRegresoDate && fechaRegresoDate <= fechaLlegadaDate) {
-      throw new BadRequestException(
-        'La fecha de regreso debe ser posterior a la fecha de llegada',
-      );
+      throw new BadRequestException('La fecha de regreso debe ser posterior a la fecha de llegada');
     }
-
-    //Desestructuracion de createReservaDto en variables
-    const { hotelId, usuarioId, actividadIds, ...reservaData } =
-      createReservaDto;
 
     // Validar hotel
     const hotel = await this.hotelRepository.findOneBy({ id: hotelId });
-    if (!hotel) {
-      throw new NotFoundException(
-        `No se encuentra el Hotel con id: ${hotelId}`,
-      );
-    }
+    if (!hotel) throw new NotFoundException(`No se encuentra el Hotel con id: ${hotelId}`);
 
     // Validar usuario
     const usuario = await this.usuarioRepository.findOneBy({ id: usuarioId });
-    if (!usuario) {
-      throw new NotFoundException(
-        `No se encuentra el Usuario con id ${usuarioId}`,
-      );
-    }
+    if (!usuario) throw new NotFoundException(`No se encuentra el Usuario con id ${usuarioId}`);
 
-    // Validar actividades (si es que esta presente en el DTO, ya que es opcional)
+    // Validar actividades
     const actividades =
       actividadIds && actividadIds.length > 0
         ? await this.actividadRepository.findBy({ id: In(actividadIds) })
         : [];
 
     if (actividadIds && actividades.length !== actividadIds.length) {
-      throw new NotFoundException(
-        `Una o mas actividades no fueron encontradas`,
-      );
+      throw new NotFoundException(`Una o mas actividades no fueron encontradas`);
     }
 
-    // Si todas las validaciones fueron exitosas crear la entidad con los datos recibidos en el DTO.
-    const reservaEntity = this.reservaRepository.create({
-      ...reservaData,
+    // Crear entidad
+    const reserva = this.reservaRepository.create({
+      ciudad,
+      fechaLlegada: fechaLlegadaDate,
+      fechaRegreso: fechaRegresoDate,
       hotel,
       usuario,
       actividades,
     });
 
-    return this.reservaRepository.save(reservaEntity);
+    // Guardar en DB
+    const savedReserva: Reserva = await this.reservaRepository.save(reserva);
+    return savedReserva;
   }
 
-  public async update(
-    idReserva: number,
-    updateReservaDto: UpdateReservaDto,
-  ): Promise<Reserva> {
-    // Desestructuramos el DTO
-    const { hotelId, usuarioId, actividadIds, ...updateData } =
-      updateReservaDto;
+  public async update(idReserva: number, updateReservaDto: UpdateReservaDto): Promise<Reserva> {
+    const { hotelId, usuarioId, actividadIds, ...updateData } = updateReservaDto;
 
-    // Cargamos la reserva existente con sus relaciones
     const reserva = await this.reservaRepository.findOne({
       where: { idReserva },
       relations: ['hotel', 'usuario', 'actividades'],
     });
-    if (!reserva) {
-      throw new NotFoundException(
-        `No se encontro la Reserva con el id: ${idReserva}`,
-      );
-    }
+    if (!reserva) throw new NotFoundException(`No se encontro la Reserva con el id: ${idReserva}`);
 
-    // Actualizamos los campos simples
     Object.assign(reserva, updateData);
 
-    // Actualizamos el hotel, si se envio en el Update DTO.
     if (hotelId !== undefined) {
       const hotel = await this.hotelRepository.findOneBy({ id: hotelId });
-      if (!hotel)
-        throw new NotFoundException(`Hotel with id ${hotelId} not found`);
+      if (!hotel) throw new NotFoundException(`Hotel with id ${hotelId} not found`);
       reserva.hotel = hotel;
     }
 
-    // Actualizamos el usuario, si se envio en el Update DTO.
     if (usuarioId !== undefined) {
       const usuario = await this.usuarioRepository.findOneBy({ id: usuarioId });
-      if (!usuario)
-        throw new NotFoundException(`Usuario with id ${usuarioId} not found`);
+      if (!usuario) throw new NotFoundException(`Usuario with id ${usuarioId} not found`);
       reserva.usuario = usuario;
     }
 
-    // Actualizamos las actividades, si se enviaron en el Update DTO.
-    //Buscando en la DB las actividades presentes en el arreglo actividadIds.
     if (actividadIds !== undefined) {
-      const actividades =
-        actividadIds.length > 0
-          ? await this.actividadRepository.findBy({ id: In(actividadIds) })
-          : [];
+      const actividades = actividadIds.length > 0
+        ? await this.actividadRepository.findBy({ id: In(actividadIds) })
+        : [];
 
-      //Si no se encontraron TODAS las ids en la base de datos, tirar un error.
-      if (
-        actividadIds.length > 0 &&
-        actividades.length !== actividadIds.length
-      ) {
+      if (actividadIds.length > 0 && actividades.length !== actividadIds.length) {
         throw new NotFoundException(`Una o mas actividades no se encontraron`);
       }
 
@@ -163,7 +128,6 @@ export class ReservaService {
 
   public async remove(id: number): Promise<Reserva> {
     const reserva = await this.findOne(id);
-
-    return await this.reservaRepository.remove(reserva);
+    return this.reservaRepository.remove(reserva);
   }
 }

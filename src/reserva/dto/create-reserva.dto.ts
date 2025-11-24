@@ -1,12 +1,4 @@
-import {
-  ArrayNotEmpty,
-  ArrayUnique,
-  IsArray,
-  IsDateString,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { ArrayNotEmpty, ArrayUnique, IsArray, IsDateString, IsNumber, IsOptional, IsString, } from 'class-validator';
 
 export class CreateReservaDto {
   @IsString()
@@ -29,6 +21,6 @@ export class CreateReservaDto {
   @IsArray()
   @ArrayNotEmpty()
   @ArrayUnique()
-  @IsNumber({}, { each: true }) 
+  @IsNumber({}, { each: true })
   actividadIds?: number[];
 }
