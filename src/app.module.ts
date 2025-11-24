@@ -6,12 +6,14 @@ import { UsuariosModule } from './usuarios/usuarios.module';
 import { ActividadModule } from './actividad/actividad.module';
 import { ReservaModule } from './reserva/reserva.module';
 import { HotelesModule } from './hoteles/hoteles.module';
+import { ComentariosModule } from './comentarios/comentarios.module';
 
 import { Hotel } from './hoteles/entities/hoteles.entity';
 import { Usuario } from './usuarios/entities/usuario.entity';
 import { Actividad } from './actividad/entities/actividad.entity';
 import { Reserva } from './reserva/entities/reserva.entity';
-import { ComentariosModule } from './comentarios/comentarios.module';
+
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -32,6 +34,8 @@ import { ComentariosModule } from './comentarios/comentarios.module';
       migrationsRun: false,
       autoLoadEntities: true,
     }),
+
+    MailModule, // <-- AGREGADO
 
     UsuariosModule,
     ActividadModule,
