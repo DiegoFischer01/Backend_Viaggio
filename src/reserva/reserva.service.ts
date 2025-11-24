@@ -1,32 +1,22 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { CreateReservaDto } from './dto/create-reserva.dto';
-import { UpdateReservaDto } from './dto/update-reserva.dto';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, In } from 'typeorm';
 import { Reserva } from './entities/reserva.entity';
-import { In, Repository } from 'typeorm';
 import { Hotel } from 'src/hoteles/entities/hoteles.entity';
 import { Usuario } from 'src/usuarios/entities/usuario.entity';
 import { Actividad } from 'src/actividad/entities/actividad.entity';
+import { CreateReservaDto } from './dto/create-reserva.dto';
+import { UpdateReservaDto } from './dto/update-reserva.dto';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class ReservaService {
   constructor(
-    @InjectRepository(Reserva)
-    private readonly reservaRepository: Repository<Reserva>,
-
-    @InjectRepository(Hotel)
-    private hotelRepository: Repository<Hotel>,
-
-    @InjectRepository(Usuario)
-    private usuarioRepository: Repository<Usuario>,
-
-    @InjectRepository(Actividad)
-    private actividadRepository: Repository<Actividad>,
-
+    @InjectRepository(Reserva) private readonly reservaRepository: Repository<Reserva>,
+    @InjectRepository(Hotel) private readonly hotelRepository: Repository<Hotel>,
+    @InjectRepository(Usuario) private readonly usuarioRepository: Repository<Usuario>,
+    @InjectRepository(Actividad) private readonly actividadRepository: Repository<Actividad>,
+    private readonly mailService: MailService, // inyectamos MailService
   ) {}
 
   public async findAll(): Promise<Reserva[]> {
@@ -71,7 +61,7 @@ export class ReservaService {
         : [];
 
     if (actividadIds && actividades.length !== actividadIds.length) {
-      throw new NotFoundException(`Una o mas actividades no fueron encontradas`);
+      throw new NotFoundException(`Una o más actividades no fueron encontradas`);
     }
 
     // Crear entidad
@@ -96,19 +86,19 @@ export class ReservaService {
       where: { idReserva },
       relations: ['hotel', 'usuario', 'actividades'],
     });
-    if (!reserva) throw new NotFoundException(`No se encontro la Reserva con el id: ${idReserva}`);
+    if (!reserva) throw new NotFoundException(`No se encontró la Reserva con id: ${idReserva}`);
 
     Object.assign(reserva, updateData);
 
     if (hotelId !== undefined) {
       const hotel = await this.hotelRepository.findOneBy({ id: hotelId });
-      if (!hotel) throw new NotFoundException(`Hotel with id ${hotelId} not found`);
+      if (!hotel) throw new NotFoundException(`Hotel con id ${hotelId} no encontrado`);
       reserva.hotel = hotel;
     }
 
     if (usuarioId !== undefined) {
       const usuario = await this.usuarioRepository.findOneBy({ id: usuarioId });
-      if (!usuario) throw new NotFoundException(`Usuario with id ${usuarioId} not found`);
+      if (!usuario) throw new NotFoundException(`Usuario con id ${usuarioId} no encontrado`);
       reserva.usuario = usuario;
     }
 
@@ -116,11 +106,9 @@ export class ReservaService {
       const actividades = actividadIds.length > 0
         ? await this.actividadRepository.findBy({ id: In(actividadIds) })
         : [];
-
       if (actividadIds.length > 0 && actividades.length !== actividadIds.length) {
-        throw new NotFoundException(`Una o mas actividades no se encontraron`);
+        throw new NotFoundException(`Una o más actividades no se encontraron`);
       }
-
       reserva.actividades = actividades;
     }
 
@@ -131,23 +119,22 @@ export class ReservaService {
     const reserva = await this.findOne(id);
     return this.reservaRepository.remove(reserva);
   }
-  
+
+  // Método para enviar confirmación por mail
   public async enviarConfirmacion(id: number) {
-  const reserva = await this.reservaRepository.findOne({
-    where: { idReserva: id },
-    relations: ['usuario', 'hotel', 'actividades'],
-  });
+    const reserva = await this.findOne(id);
 
-  if (!reserva) {
-    throw new NotFoundException(`No se encontró la reserva con id ${id}`);
+    // Validar que el usuario tenga email
+    if (!reserva.usuario.email) {
+      throw new BadRequestException('El usuario de esta reserva no tiene un email registrado');
+    }
+
+    // Enviar mail
+    await this.mailService.enviarConfirmacion(reserva.usuario.email, reserva.idReserva);
+
+    return {
+      message: 'Confirmación enviada correctamente',
+      reserva,
+    };
   }
-
-  // Si después querés mandar mail, este es el lugar.
-  // Por ahora devolvemos la reserva para confirmar que funciona.
-  return {
-    message: 'Confirmación enviada correctamente (simulada)',
-    reserva,
-  };
-}
-
 }
