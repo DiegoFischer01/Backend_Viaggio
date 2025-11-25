@@ -130,7 +130,9 @@ export class ReservaService {
     }
 
     // Enviar mail
-    await this.mailService.enviarConfirmacion(reserva.usuario.email, reserva.idReserva);
+   // await this.mailService.enviarConfirmacion(reserva.usuario.email, reserva.idReserva);
+await this.mailService.enviarConfirmacion(reserva.usuario.email, reserva);
+
 
     return {
       message: 'Confirmación enviada correctamente',
