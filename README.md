@@ -98,3 +98,121 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 >>>>>>> 34833f8 (inicializando nest y subiendo al repo remoto)
+
+
+
+
+# Backend Viaggio
+
+## 🚀 Introducción
+El backend de **Viaggio** está construido con **NestJS**, **TypeScript** y **MySQL**, usando **TypeORM** para el acceso a datos.  
+Incluye autenticación con **JWT**, hashing de contraseñas con **bcrypt**, envío de correos con **Nodemailer**, validación de DTOs con **class-validator / class-transformer**, y manejo seguro de variables con **dotenv**.  
+También usamos **GitHub** para control de versiones, **ESLint / Prettier** para estilo y calidad de código, y **Jest** para testing.
+
+---
+
+## ⚙️ Instalación y configuración
+Clonar el repo y ejecutar:
+
+```bash
+npm install
+
+
+# Base de datos
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASS=your_password
+DB_NAME=viaggio
+
+# Autenticación
+JWT_SECRET=your_secret
+JWT_EXPIRES=1d
+
+# Mailing
+MAIL_HOST=smtp.example.com
+MAIL_PORT=587
+MAIL_USER=your_user
+MAIL_PASS=your_password
+MAIL_FROM=viaggio@example.com
+
+## 🛠 Scripts
+- Desarrollo: `npm run start:dev`  
+- Producción: `npm run start:prod`  
+- Compilación: `npm run build`  
+- Tests: `npm run test`
+
+## 📚 Endpoints
+**Autenticación**  
+- POST /auth/register → registro de usuario  
+- POST /auth/login → login y generación de token  
+
+**Usuarios**  
+- GET /usuarios → listar usuarios  
+- POST /usuarios → crear usuario  
+- PUT /usuarios/:id → actualizar usuario  
+- DELETE /usuarios/:id → eliminar usuario  
+
+**Actividades**  
+- GET /actividad → listar actividades  
+- POST /actividad → crear actividad  
+- PUT /actividad/:id → actualizar actividad  
+- DELETE /actividad/:id → eliminar actividad  
+
+**Reservas**  
+- GET /reserva → listar reservas  
+- POST /reserva → crear reserva  
+- PUT /reserva/:id → actualizar reserva  
+- DELETE /reserva/:id → cancelar reserva  
+
+**Hoteles**  
+- GET /hoteles → listar hoteles  
+- POST /hoteles → crear hotel  
+- PUT /hoteles/:id → actualizar hotel  
+- DELETE /hoteles/:id → eliminar hotel  
+
+## 🧰 Herramientas y librerías usadas
+- NestJS  
+- TypeScript  
+- MySQL (con MySQL Workbench)  
+- TypeORM  
+- JWT  
+- Bcrypt  
+- Nodemailer  
+- Class-validator / class-transformer  
+- Dotenv  
+- GitHub  
+- ESLint / Prettier  
+- Jest  
+
+## 👥 Autores
+- Bevacqua Mayra / mayrabevacqua@gmail.com  
+- Beltramella Alex / beatsinka@gmail.com  
+- Martorano Simon / simonmartorano@gmail.com  
+- Fischer Diego / diegof01gm@gmail.com  
+
+## 📄 Documentación
+Toda la documentación del proyecto se encuentra en los recursos compartidos del equipo.
+
+## 🔗 Links
+- Discord (Sala 17): https://discord.com/channels/1308174344752730222/1308178602151510099  
+- Repositorio Backend GitHub: https://github.com/DiegoFischer01/Backend_Viaggio.git  
+- Repositorio Proyecto Final GitHub: https://github.com/DiegoFischer01/Proyecto_Final_2025.git  
+- Presentación: https://prezi.com/view/Le95pzyfYGTooSJqO1iG/  
+- Drive (Documentación): https://drive.google.com/drive/u/2/folders/1NPZYbBj9i7ZQHclWtPINpthVYPVIPYCm?q=sharedwith:public%20parent:1NPZYbBj9i7ZQHclWtPINpthVYPVIPYCm  
+- Trello: https://trello.com/b/i8JZ6kJe/basic-board  
+- Drive de Vivi: https://docs.google.com/spreadsheets/d/1vk_FE1fCL0Y_JTdr20FgdD9wB8lkP4XP3_N28-Cg61U/edit?gid=0#gid=0  
+- Figma: https://www.figma.com/design/SV0oD12vB9AnFIk2I20yNi/Viaggio?node-id=0-1&p=f  
+- Lucidchart (Diagrama de flujo): https://lucid.app/lucidchart/adfcf256-a7fb-4311-a069-bfddea551d85/edit?invitationId=inv_378be7f5-b3d2-4408-b0c9-59b4c11978a8&referringApp=slack&page=0_0#  
+- Diagrama de entidades: https://app.diagrams.net/#G1cO6aMk4oOVmWL_Xnu2tDk5uAM0xY2xS2#%7B%22pageId%22%3A%22lBe7LtLD_OevNelcKrqA%22%7D  
+
+## 🤝 Contribución
+El flujo de trabajo del equipo es directo sobre el repositorio en **GitHub**:  
+1. Clonar el repositorio (`git clone <url>`)  
+2. Crear una rama (`git checkout -b nombre-rama`)  
+3. Realizar cambios y commits (`git commit -m 'feat: nueva funcionalidad'`)  
+4. Subir la rama (`git push origin nombre-rama`)  
+5. Abrir un Pull Request en GitHub para revisión e integración  
+
+## 📄 Licencia
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
