@@ -185,6 +185,18 @@ MAIL_FROM=viaggio@example.com
 - ESLint / Prettier  
 - Jest  
 
+## 📦 Instalación de dependencias
+
+Ejecutar los siguientes comandos para instalar los paquetes necesarios del backend:
+
+```bash
+npm install @nestjs/jwt passport-jwt passport bcrypt
+npm install --save-dev @types/passport-jwt
+npm install @nestjs/typeorm typeorm mysql2
+npm install nodemailer
+npm install class-validator class-transformer
+npm install dotenv
+
 ## 👥 Autores
 - Bevacqua Mayra / mayrabevacqua@gmail.com  
 - Beltramella Alex / beatsinka@gmail.com  
