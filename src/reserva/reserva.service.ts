@@ -16,7 +16,7 @@ export class ReservaService {
     @InjectRepository(Hotel) private readonly hotelRepository: Repository<Hotel>,
     @InjectRepository(Usuario) private readonly usuarioRepository: Repository<Usuario>,
     @InjectRepository(Actividad) private readonly actividadRepository: Repository<Actividad>,
-    private readonly mailService: MailService, // inyectamos MailService
+    private readonly mailService: MailService,
   ) {}
 
   public async findAll(): Promise<Reserva[]> {
@@ -41,7 +41,7 @@ export class ReservaService {
 
     // Validar fechas
     const fechaLlegadaDate = new Date(fechaLlegada);
-    const fechaRegresoDate = fechaRegreso ? new Date(fechaRegreso) : undefined;
+    const fechaRegresoDate = fechaRegreso ? new Date(fechaRegreso) : null;
     if (fechaRegresoDate && fechaRegresoDate <= fechaLlegadaDate) {
       throw new BadRequestException('La fecha de regreso debe ser posterior a la fecha de llegada');
     }
@@ -75,8 +75,7 @@ export class ReservaService {
     });
 
     // Guardar en DB
-    const savedReserva: Reserva = await this.reservaRepository.save(reserva);
-    return savedReserva;
+    return await this.reservaRepository.save(reserva);
   }
 
   public async update(idReserva: number, updateReservaDto: UpdateReservaDto): Promise<Reserva> {
@@ -112,7 +111,7 @@ export class ReservaService {
       reserva.actividades = actividades;
     }
 
-    return this.reservaRepository.save(reserva);
+    return await this.reservaRepository.save(reserva);
   }
 
   public async remove(id: number): Promise<Reserva> {
@@ -130,9 +129,7 @@ export class ReservaService {
     }
 
     // Enviar mail
-   // await this.mailService.enviarConfirmacion(reserva.usuario.email, reserva.idReserva);
-await this.mailService.enviarConfirmacion(reserva.usuario.email, reserva);
-
+    await this.mailService.enviarConfirmacion(reserva.usuario.email, reserva);
 
     return {
       message: 'Confirmación enviada correctamente',
