@@ -1,7 +1,7 @@
 import { Actividad } from 'src/actividad/entities/actividad.entity';
 import { Hotel } from 'src/hoteles/entities/hoteles.entity';
 import { Usuario } from 'src/usuarios/entities/usuario.entity';
-import {Column,  Entity,JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn,} from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, } from 'typeorm';
 
 @Entity('reservas')
 export class Reserva {
@@ -15,7 +15,7 @@ export class Reserva {
   fechaLlegada: Date;
 
   @Column({ type: 'date', nullable: true })
-  fechaRegreso: Date;
+  fechaRegreso: Date | null;
 
   @ManyToMany(() => Actividad, (actividad) => actividad.reservas)
   @JoinTable()
