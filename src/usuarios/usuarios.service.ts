@@ -11,6 +11,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { Reserva } from 'src/reserva/entities/reserva.entity';
 
 @Injectable()
 export class UsuarioService {
@@ -18,6 +19,8 @@ export class UsuarioService {
     @InjectRepository(Usuario)
     private readonly usuarioRepository: Repository<Usuario>,
     private readonly jwtService: JwtService,
+    @InjectRepository(Reserva)
+    private reservaRepository: Repository<Reserva>,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<Usuario> {
@@ -27,6 +30,13 @@ export class UsuarioService {
       password: hashedPassword,
     });
     return this.usuarioRepository.save(nuevoUsuario);
+  }
+
+  async findReservasDeUsuario(usuarioId: number) {
+    return this.reservaRepository.find({
+      where: { usuario: { id: usuarioId } },
+      relations: ['hotel', 'actividades'],
+    });
   }
 
   async findAll(): Promise<Usuario[]> {

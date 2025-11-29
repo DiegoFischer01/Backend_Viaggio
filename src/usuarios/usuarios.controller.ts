@@ -37,10 +37,25 @@ export class UsuariosController {
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @Get(':id/reservas')
+  findReservasDeUsuario(@Param('id') id: string, @Request() req) {
+    const userId = parseInt(id);
+    //Si no sos admin solo podes ver tus propios datos
+    if (req.user.role !== 'admin' && req.user.id !== userId) {
+      throw new ForbiddenException(
+        'No puedes ver las reservas de otros usuarios.',
+      );
+    }
+    return this.usuarioService.findReservasDeUsuario(Number(id));
+  }
+
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   findAll(@Request() req) {
     if (req.user.role !== 'admin') {
-      throw new ForbiddenException('Solo admins.');
+      throw new ForbiddenException(
+        'Solo admins pueden acceder a todos los usuarios.',
+      );
     }
     return this.usuarioService.findAll();
   }
@@ -69,7 +84,7 @@ export class UsuariosController {
   @Delete(':id')
   remove(@Param('id') id: string, @Request() req) {
     if (req.user.role !== 'admin') {
-      throw new ForbiddenException('Solo admins.');
+      throw new ForbiddenException('Solo admins pueden borrar usuarios.');
     }
     return this.usuarioService.remove(+id);
   }
