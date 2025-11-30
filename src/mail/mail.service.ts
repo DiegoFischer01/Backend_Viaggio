@@ -9,12 +9,12 @@ export class MailService {
   constructor() {
     // Configuración del transporte
     this.transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com', 
+      host: 'smtp.gmail.com',
       port: 587,
       secure: false,
       auth: {
-        user: process.env.MAIL_USER, 
-        pass: process.env.MAIL_PASS, 
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS,
       },
     });
   }
@@ -23,22 +23,48 @@ export class MailService {
     // Asegurarse de que todas las propiedades existan
     const hotelNombre = reserva.hotel?.nombre || 'No definido';
     const hotelDireccion = reserva.hotel?.direccion || 'No definida';
-    const hotelPrecio = reserva.hotel?.precio ?? 'No definido';
+    const hotelPrecio = reserva.hotel?.precio ?? 0; // 👈 si viene "No definido" lo reemplazo por 0 para poder calcular
 
     // Imagen: principal > url > placeholder
-    const hotelImagen = reserva.hotel?.imagenPrincipal 
-                        || reserva.hotel?.imagenUrl 
-                        || 'https://via.placeholder.com/600x300?text=Hotel+Viaggio';
+    const hotelImagen =
+      reserva.hotel?.imagenPrincipal ||
+      reserva.hotel?.imagenUrl ||
+      'https://via.placeholder.com/600x300?text=Hotel+Viaggio';
 
     const usuarioNombre = reserva.usuario?.nombre || 'Usuario';
 
-    const actividadesHtml = reserva.actividades && reserva.actividades.length > 0
-      ? reserva.actividades.map(act => `<li><b>${act.titulo || ''}</b>: ${act.descripcion || ''}</li>`).join('')
-      : '<li>No seleccionaste actividades</li>';
+    const actividadesHtml =
+      reserva.actividades && reserva.actividades.length > 0
+        ? reserva.actividades
+            .map(
+              (act) =>
+                `<li><b>${act.titulo || ''}</b>: ${act.descripcion || ''}</li>`
+            )
+            .join('')
+        : '<li>No seleccionaste actividades</li>';
 
-    const fechaLlegada = reserva.fechaLlegada ? new Date(reserva.fechaLlegada).toLocaleDateString() : 'No definida';
-    const fechaRegreso = reserva.fechaRegreso ? new Date(reserva.fechaRegreso).toLocaleDateString() : 'No definida';
+    const fechaLlegada = reserva.fechaLlegada
+      ? new Date(reserva.fechaLlegada).toLocaleDateString()
+      : 'No definida';
 
+    const fechaRegreso = reserva.fechaRegreso
+      ? new Date(reserva.fechaRegreso).toLocaleDateString()
+      : 'No definida';
+
+    // 🟢 CALCULAR NOCHES
+    let noches = 1;
+    if (reserva.fechaLlegada && reserva.fechaRegreso) {
+      const inicio = new Date(reserva.fechaLlegada).getTime();
+      const fin = new Date(reserva.fechaRegreso).getTime();
+
+      const diff = (fin - inicio) / (1000 * 60 * 60 * 24);
+      noches = diff >= 1 ? diff : 1;
+    }
+
+    // 🟢 TOTAL = PRECIO * NOCHES
+    const total = hotelPrecio * noches;
+
+    // HTML del mail actualizado
     const html = `
       <div style="font-family: Arial, sans-serif; max-width:600px; margin:auto; padding:20px; border:1px solid #ddd; border-radius:10px;">
         <h2 style="text-align:center; color:#333;">¡Tu reserva está confirmada!</h2>
@@ -48,7 +74,11 @@ export class MailService {
         <h3>Alojamiento</h3>
         <p><b>${hotelNombre}</b><br>
            Dirección: ${hotelDireccion}<br>
-           Precio: $${hotelPrecio}</p>
+           Precio por noche: $${hotelPrecio}<br>
+           Noches: ${noches}<br>
+           <b>Total: $${total}</b>
+        </p>
+
         <img src="${hotelImagen}" alt="Imagen del hotel" style="width:100%; border-radius:8px; margin-bottom:15px;" />
 
         <h3>Fechas</h3>
@@ -63,7 +93,7 @@ export class MailService {
           <b>Banco:</b> Banco Ejemplo<br>
           <b>CBU:</b> 1234567890123456789012<br>
           <b>Titular:</b> Viaggio SRL<br>
-          <b>Monto:</b> $${hotelPrecio}
+          <b>Monto total:</b> $${total}
         </p>
 
         <p style="text-align:center; margin-top:20px;">¡Te deseamos un excelente viaje!</p>
