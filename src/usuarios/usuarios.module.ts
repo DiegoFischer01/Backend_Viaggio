@@ -7,10 +7,11 @@ import { UsuarioService } from './usuarios.service';
 import { UsuariosController } from './usuarios.controller';
 import { Usuario } from './entities/usuario.entity';
 import { JwtStrategy } from './jwt.strategy';
+import { Reserva } from 'src/reserva/entities/reserva.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Usuario]),
+    TypeOrmModule.forFeature([Usuario, Reserva]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
