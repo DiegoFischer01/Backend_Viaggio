@@ -22,18 +22,20 @@ import { MailModule } from './mail/mail.module';
     }),
 
     TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.MYSQL_HOST,
-      port: Number(process.env.MYSQL_PORT),
-      username: process.env.MYSQL_USER,
-      password: process.env.MYSQL_PASSWORD,
-      database: process.env.MYSQL_DATABASE,
-      entities: [Hotel, Usuario, Actividad, Reserva],
-      synchronize: false,
-      migrations: ['dist/src/migrations/*.js'],
-      migrationsRun: false,
-      autoLoadEntities: true,
-    }),
+  type: 'mysql',
+  host: process.env.MYSQL_HOST,
+  port: Number(process.env.MYSQL_PORT),
+  username: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
+  synchronize: false, // Railway NO permite true
+  autoLoadEntities: true,
+
+  // ENTITIES Y MIGRATIONS PARA PRODUCCIÓN
+  entities: [__dirname + '/../*/.entity.js'],
+  migrations: [__dirname + '/../*/migrations/.js'],
+  migrationsRun: false,
+}),
 
     MailModule, // <-- AGREGADO
 
