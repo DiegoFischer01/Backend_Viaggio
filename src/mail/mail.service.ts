@@ -23,7 +23,7 @@ export class MailService {
     // Asegurarse de que todas las propiedades existan
     const hotelNombre = reserva.hotel?.nombre || 'No definido';
     const hotelDireccion = reserva.hotel?.direccion || 'No definida';
-    const hotelPrecio = reserva.hotel?.precio ?? 0; // 👈 si viene "No definido" lo reemplazo por 0 para poder calcular
+    const hotelPrecio = reserva.hotel?.precio ?? 0;
 
     // Imagen: principal > url > placeholder
     const hotelImagen =
@@ -51,7 +51,7 @@ export class MailService {
       ? new Date(reserva.fechaRegreso).toLocaleDateString()
       : 'No definida';
 
-    // 🟢 CALCULAR NOCHES
+    // CALCULAR NOCHES
     let noches = 1;
     if (reserva.fechaLlegada && reserva.fechaRegreso) {
       const inicio = new Date(reserva.fechaLlegada).getTime();
@@ -61,7 +61,7 @@ export class MailService {
       noches = diff >= 1 ? diff : 1;
     }
 
-    // 🟢 TOTAL = PRECIO * NOCHES
+    // TOTAL = PRECIO * NOCHES
     const total = hotelPrecio * noches;
 
     // HTML del mail actualizado
@@ -73,10 +73,10 @@ export class MailService {
 
         <h3>Alojamiento</h3>
         <p><b>${hotelNombre}</b><br>
-           Dirección: ${hotelDireccion}<br>
-           Precio por noche: $${hotelPrecio}<br>
-           Noches: ${noches}<br>
-           <b>Total: $${total}</b>
+            Dirección: ${hotelDireccion}<br>
+            Precio por noche: $${hotelPrecio}<br>
+            Noches: ${noches}<br>
+            <b>Total: $${total}</b>
         </p>
 
         <img src="${hotelImagen}" alt="Imagen del hotel" style="width:100%; border-radius:8px; margin-bottom:15px;" />
