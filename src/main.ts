@@ -13,7 +13,7 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:5173',
-      'https://backendviaggio-production.up.railway.app'
+      'https://reactviaggio.vercel.app'
     ],
     credentials: true,
   });
