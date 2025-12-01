@@ -2,7 +2,6 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 
-
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
@@ -13,8 +12,9 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:5173',
-      'https://reactviaggio.vercel.app'
+      'https://front-viaggio.vercel.app'
     ],
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   });
 
