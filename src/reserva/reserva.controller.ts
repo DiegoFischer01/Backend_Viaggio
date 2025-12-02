@@ -40,7 +40,7 @@ export class ReservaController {
   // End-point para enviar confirmación por mail
   @Post(':id/enviar-confirmacion')
   async enviarConfirmacion(@Param('id', ParseIntPipe) id: number) {
-
+  
     this.reservaService.enviarConfirmacion(id)
       .then(() => alert("Mail enviado"))
       .catch(e => console.error("Error al enviar mail:", e));
