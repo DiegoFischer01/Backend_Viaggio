@@ -3,6 +3,7 @@ import { ReservaService } from './reserva.service';
 import { CreateReservaDto } from './dto/create-reserva.dto';
 import { UpdateReservaDto } from './dto/update-reserva.dto';
 import { Reserva } from './entities/reserva.entity';
+import { log } from 'console';
 
 @Controller('reservas')
 export class ReservaController {
@@ -39,6 +40,14 @@ export class ReservaController {
   // End-point para enviar confirmación por mail
   @Post(':id/enviar-confirmacion')
   async enviarConfirmacion(@Param('id', ParseIntPipe) id: number) {
-    return this.reservaService.enviarConfirmacion(id);
+
+    this.reservaService.enviarConfirmacion(id)
+      .then(() => alert("Mail enviado"))
+      .catch(e => console.error("Error al enviar mail:", e));
+
+    return {
+      ok: true,
+      message: "Reserva creada, El correo se esta enviando..."
+    };
   }
 }
