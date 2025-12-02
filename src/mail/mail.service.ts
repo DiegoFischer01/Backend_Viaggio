@@ -1,22 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import * as nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import { Reserva } from 'src/reserva/entities/reserva.entity';
 
 @Injectable()
 export class MailService {
-  private transporter;
+  private resend: Resend;
 
   constructor() {
-    // Configuración del transporte
-    this.transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS,
-      },
-    });
+    // Inicializamos el cliente de Resend
+    this.resend = new Resend(process.env.RESEND_API_KEY);
   }
 
   async enviarConfirmacion(destinatario: string, reserva: Reserva) {
@@ -25,7 +17,6 @@ export class MailService {
     const hotelDireccion = reserva.hotel?.direccion || 'No definida';
     const hotelPrecio = reserva.hotel?.precio ?? 0;
 
-    // Imagen: principal > url > placeholder
     const hotelImagen =
       reserva.hotel?.imagenPrincipal ||
       reserva.hotel?.imagenUrl ||
@@ -56,15 +47,13 @@ export class MailService {
     if (reserva.fechaLlegada && reserva.fechaRegreso) {
       const inicio = new Date(reserva.fechaLlegada).getTime();
       const fin = new Date(reserva.fechaRegreso).getTime();
-
       const diff = (fin - inicio) / (1000 * 60 * 60 * 24);
       noches = diff >= 1 ? diff : 1;
     }
 
-    // TOTAL = PRECIO * NOCHES
     const total = hotelPrecio * noches;
 
-    // HTML del mail actualizado
+    // HTML DEL MAIL
     const html = `
       <div style="font-family: Arial, sans-serif; max-width:600px; margin:auto; padding:20px; border:1px solid #ddd; border-radius:10px;">
         <h2 style="text-align:center; color:#333;">¡Tu reserva está confirmada!</h2>
@@ -100,14 +89,20 @@ export class MailService {
       </div>
     `;
 
-    const info = await this.transporter.sendMail({
-      from: '"Viaggio" <no-reply@viaggio.com>',
+    // ENVÍO DEL MAIL CON RESEND
+    const { data, error } = await this.resend.emails.send({
+      from: "Viaggio <onboarding@resend.dev>",
       to: destinatario,
-      subject: 'Resumen de tu reserva Viaggio',
+      subject: "Resumen de tu reserva Viaggio",
       html,
     });
 
-    console.log('Mensaje enviado: %s', info.messageId);
-    return info;
+    if (error) {
+      console.error("Error al enviar correo:", error);
+      throw error;
+    }
+
+    console.log("Correo enviado correctamente:", data?.id);
+    return data;
   }
 }
