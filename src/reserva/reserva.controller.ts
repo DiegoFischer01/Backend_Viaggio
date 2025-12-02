@@ -44,7 +44,7 @@ export class ReservaController {
     this.reservaService.enviarConfirmacion(id)
       .then(() => alert("Mail enviado"))
       .catch(e => console.error("Error al enviar mail:", e));
-
+  
     return {
       ok: true,
       message: "Reserva creada, El correo se esta enviando..."
