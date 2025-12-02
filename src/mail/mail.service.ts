@@ -101,7 +101,7 @@ export class MailService {
       console.error("Error al enviar correo:", error);
       throw error;
     }
-
+  
     console.log("Correo enviado correctamente:", data?.id);
     return data;
   }
