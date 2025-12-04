@@ -40,14 +40,26 @@ export class ReservaController {
   // End-point para enviar confirmación por mail
   @Post(':id/enviar-confirmacion')
   async enviarConfirmacion(@Param('id', ParseIntPipe) id: number) {
+    try{
+      await this.reservaService.enviarConfirmacion(id);
+
+      console.log("Mail enviado correctamente");
+
+      return {
+        ok: true,
+        message: "Reserva creada. El corredo fue enciado correctamente."
+      };
+    } catch(error) {
+      console.error("Error al enviar mail:", error);
+
+      return {
+        ok: false,
+        message: "Hubo un error enviando el correo.",
+        error: error.message
+      };  
+    }
     
-    this.reservaService.enviarConfirmacion(id)
-      .then(() => alert("Mail enviado"))
-      .catch(e => console.error("Error al enviar mail:", e));
-  
-    return {
-      ok: true,
-      message: "Reserva creada, El correo se esta enviando..."
-    };
+
+
   }
 }
