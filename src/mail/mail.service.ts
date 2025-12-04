@@ -12,6 +12,7 @@ export class MailService {
       SibApiV3Sdk.TransactionalEmailsApiApiKeys.apiKey,
       process.env.BREVO_API_KEY,
     );
+    console.log("BREVO API KEY:", process.env.BREVO_API_KEY);
   }
   
   async enviarConfirmacion(destinatario: string, reserva: Reserva) {
