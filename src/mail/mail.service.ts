@@ -1,25 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import * as nodemailer from 'nodemailer';
 import { Reserva } from 'src/reserva/entities/reserva.entity';
 
 @Injectable()
 export class MailService {
-  private transporter;
-
-  constructor() {
-    this.transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,     // smtp-relay.brevo.com
-      port: Number(process.env.SMTP_PORT), // 587
-      secure: false,
-      auth: {
-        user: process.env.SMTP_USER,   // 9d59df001@smtp-brevo.com
-        pass: process.env.SMTP_PASS,   // tu SMTP KEY
-      },
-    });
-  }
 
   async enviarConfirmacion(destinatario: string, reserva: Reserva) {
-    // Aseguramos que las propiedades existan
     const hotelNombre = reserva.hotel?.nombre || 'No definido';
     const hotelDireccion = reserva.hotel?.direccion || 'No definida';
     const hotelPrecio = reserva.hotel?.precio ?? 0;
@@ -33,8 +18,8 @@ export class MailService {
 
     const actividadesHtml =
       reserva.actividades?.length
-        ? reserva.actividades.map(act =>
-            `<li><b>${act.titulo || ''}</b>: ${act.descripcion || ''}</li>`
+        ? reserva.actividades.map(
+            act => `<li><b>${act.titulo || ''}</b>: ${act.descripcion || ''}</li>`
           ).join('')
         : '<li>No seleccionaste actividades</li>';
 
@@ -48,20 +33,17 @@ export class MailService {
 
     let noches = 1;
     if (reserva.fechaLlegada && reserva.fechaRegreso) {
-      const diff =
-        (new Date(reserva.fechaRegreso).getTime() -
-          new Date(reserva.fechaLlegada).getTime()) /
-        (1000 * 60 * 60 * 24);
+      const inicio = new Date(reserva.fechaLlegada).getTime();
+      const fin = new Date(reserva.fechaRegreso).getTime();
+      const diff = (fin - inicio) / (1000 * 60 * 60 * 24);
       noches = diff >= 1 ? diff : 1;
     }
 
     const total = hotelPrecio * noches;
 
-    // HTML del mensaje (EL MISMO QUE TENÍAS)
     const html = `
-      <div style="font-family: Arial, sans-serif; max-width:600px; margin:auto; padding:20px; border:1px solid #ddd; border-radius:10px;">
-        <h2 style="text-align:center; color:#333;">¡Tu reserva está confirmada!</h2>
-
+      <div style="font-family: Arial; max-width:600px; margin:auto; padding:20px; border:1px solid #ddd; border-radius:10px;">
+        <h2 style="text-align:center;">¡Tu reserva está confirmada!</h2>
         <p>Hola <b>${usuarioNombre}</b>, gracias por reservar con <b>Viaggio</b>.</p>
 
         <h3>Alojamiento</h3>
@@ -80,27 +62,38 @@ export class MailService {
         <ul>${actividadesHtml}</ul>
 
         <h3>Información de pago</h3>
-        <p>Realizá la transferencia bancaria a:</p>
-        <p>
-          <b>Banco:</b> Banco Ejemplo<br>
-          <b>CBU:</b> 1234567890123456789012<br>
-          <b>Titular:</b> Viaggio SRL<br>
-          <b>Monto total:</b> $${total}
-        </p>
-
-        <p style="text-align:center; margin-top:20px;">¡Te deseamos un excelente viaje!</p>
+        <p><b>Monto total:</b> $${total}</p>
       </div>
     `;
 
-    // ENVÍO DEL MAIL — EXACTAMENTE IGUAL A LO QUE YA TENÍAS
-    const info = await this.transporter.sendMail({
-      from: `"Viaggio" <${process.env.SMTP_USER}>`, // IMPORTANTE!!
-      to: destinatario,
-      subject: 'Resumen de tu reserva Viaggio',
-      html,
-    });
+    // ----------------------------
+    // 🚀 ENVÍO DEL MAIL CON BREVO API (SIN AXIOS)
+    // ----------------------------
+    try {
+      const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: {
+          "api-key": process.env.BREVO_API_KEY!,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          sender: {
+            name: "Viaggio",
+            email: "no-reply@viaggio.com" // cualquier email funciona con la API
+          },
+          to: [{ email: destinatario }],
+          subject: "Resumen de tu reserva Viaggio",
+          htmlContent: html,
+        }),
+      });
 
-    console.log('Correo enviado correctamente:', info.messageId);
-    return info;
+      const data = await response.json();
+      console.log("📩 Email enviado:", data);
+      return data;
+
+    } catch (error) {
+      console.error("❌ Error enviando correo:", error);
+      throw error;
+    }
   }
 }
