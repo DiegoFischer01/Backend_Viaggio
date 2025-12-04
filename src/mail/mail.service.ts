@@ -1,18 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { Resend } from 'resend';
+import * as SibApiV3Sdk from '@sendinblue/client';
 import { Reserva } from 'src/reserva/entities/reserva.entity';
 
 @Injectable()
 export class MailService {
-  private resend: Resend;
+  private client: SibApiV3Sdk.TransactionalEmailsApi;
 
   constructor() {
-    // Inicializamos el cliente de Resend
-    this.resend = new Resend(process.env.RESEND_API_KEY);
+    this.client = new SibApiV3Sdk.TransactionalEmailsApi();
+    this.client.setApiKey(
+      SibApiV3Sdk.TransactionalEmailsApiApiKeys.apiKey,
+      process.env.BREVO_API_KEY,
+    );
   }
-
+  
   async enviarConfirmacion(destinatario: string, reserva: Reserva) {
-    // Asegurarse de que todas las propiedades existan
+    // --- DATOS SEGUROS ---
     const hotelNombre = reserva.hotel?.nombre || 'No definido';
     const hotelDireccion = reserva.hotel?.direccion || 'No definida';
     const hotelPrecio = reserva.hotel?.precio ?? 0;
@@ -89,20 +92,20 @@ export class MailService {
       </div>
     `;
 
-    // ENVÍO DEL MAIL CON RESEND
-    const { data, error } = await this.resend.emails.send({
-      from: "Viaggio <onboarding@resend.dev>",
-      to: destinatario,
-      subject: "Resumen de tu reserva Viaggio",
-      html,
-    });
+    // ENVÍO CON BREVO 🚀
+    try {
+      const result = await this.client.sendTransacEmail({
+        sender: { name: 'Viaggio', email: 'viaggio@mail.com' },
+        to: [{ email: destinatario }],
+        subject: 'Resumen de tu reserva Viaggio',
+        htmlContent: html,
+      });
 
-    if (error) {
-      console.error("Error al enviar correo:", error);
-      throw error;
+      console.log('Correo enviado (Brevo):', result);
+      return result;
+    } catch (err) {
+      console.error('Error enviando correo con Brevo:', err);
+      throw err;
     }
-  
-    console.log("Correo enviado correctamente:", data?.id);
-    return data;
   }
 }
