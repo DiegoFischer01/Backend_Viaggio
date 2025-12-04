@@ -56,7 +56,7 @@ export class ReservaController {
         ok: false,
         message: "Hubo un error enviando el correo.",
         error: error.message
-      };
+      };  
     }
     
 
