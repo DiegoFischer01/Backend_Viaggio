@@ -58,7 +58,7 @@ export class MailService {
         <h3>Fechas</h3>
         <p>Desde: ${fechaLlegada}<br>Hasta: ${fechaRegreso}</p>
 
-        <h3>Actividades</h3>
+        <h3>Actividades</h3>  
         <ul>${actividadesHtml}</ul>
 
         <h3>Información de pago</h3>
@@ -79,7 +79,7 @@ export class MailService {
         body: JSON.stringify({
           sender: {
             name: "Viaggio",
-            email: "no-reply@viaggio.com" // cualquier email funciona con la API
+            email: "proyectoviaggio@gmail.com" // cualquier email funciona con la API
           },
           to: [{ email: destinatario }],
           subject: "Resumen de tu reserva Viaggio",
