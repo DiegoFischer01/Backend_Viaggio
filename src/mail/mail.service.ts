@@ -79,7 +79,7 @@ export class MailService {
         body: JSON.stringify({
           sender: {
             name: "Viaggio",
-            email: "proyectoviaggio@gmail.com" // cualquier email funciona con la API
+            email: "kolben433@gmail.com" // cualquier email funciona con la API
           },
           to: [{ email: destinatario }],
           subject: "Resumen de tu reserva Viaggio",
