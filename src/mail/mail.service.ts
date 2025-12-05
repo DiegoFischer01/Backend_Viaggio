@@ -67,7 +67,7 @@ export class MailService {
     `;
 
     // ----------------------------
-    // 🚀 ENVÍO DEL MAIL CON BREVO API (SIN AXIOS)
+    // ENVÍO DEL MAIL CON BREVO API 
     // ----------------------------
     try {
       const response = await fetch("https://api.brevo.com/v3/smtp/email", {
@@ -79,7 +79,7 @@ export class MailService {
         body: JSON.stringify({
           sender: {
             name: "Viaggio",
-            email: "proyectoviaggio@gmail.com" // cualquier email funciona con la API
+            email: "proyectoviaggio@gmail.com"
           },
           to: [{ email: destinatario }],
           subject: "Resumen de tu reserva Viaggio",
@@ -92,7 +92,7 @@ export class MailService {
       return data;
 
     } catch (error) {
-      console.error("❌ Error enviando correo:", error);
+      console.error(" Error enviando correo:", error);
       throw error;
     }
   }
